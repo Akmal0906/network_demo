@@ -3,23 +3,28 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 import '../model/post_model.dart';
+import '../model/user_model.dart';
 
 class Network {
-  static String BASE = "jsonplaceholder.typicode.com";
+  static String BASE = "dummy.restapiexample.com";
   static Map<String, String> headers = {
     'Content-Type': 'application/json; charset=UTF-8'
   };
 
   /*Http Apis*/
-  static String API_LIST = "/posts";
-  static String API_CREATE = "/posts";
-  static String API_DELETE = "/posts";
-  static String API_UPDATE = "/posts";
+  static String API_LIST = "/api/v1/employees";
+  static String API_LIST_id = "/api/v1/employee/";//{id}
+  static String API_CREATE = "/api/v1/create";
+  static String API_UPDATE = "/api/v1/update/"; //{id}
+  static String API_DELETE = "/api/v1/delete/"; //{id}
+  // static String API_CREATE = "/posts";
+  // static String API_DELETE = "/posts/";
+  // static String API_UPDATE = "/posts/";
   /*Http request*/
 
   static Future<String?> GET(String api, Map<String, String> params) async {
-    var uri = Uri.http(BASE, api, params);
-    var response = await get(uri, headers: headers);
+    var uri = Uri.https(BASE, api, params);
+    var response = await get(uri,headers: headers);
     if (response.statusCode == 200) {
       return response.body;
     }
@@ -67,12 +72,30 @@ class Network {
     });
     return params;
   }
+  static Map<String,String>paramsCreatee(User user){
+    Map<String,String> params={};
+    params.addAll({
+      'name':user.name,
+      'id':user.id.toString(),
+      'salary':user.salary,
+      'age':user.age.toString(),
+    });
+    return params;
+  }
   static Map<String,String>paramsUpdate(Post post){
     Map<String,String> params={};
     params.addAll({
       'title':post.title,
       'body':post.body,
       'userId':post.userId.toString(),
+      'id':post.id.toString(),
+    });
+    return params;
+  }
+  static Map<String,String>paramsId(Post post){
+    Map<String,String> params={};
+    params.addAll({
+
       'id':post.id.toString(),
     });
     return params;
